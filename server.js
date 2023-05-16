@@ -26,3 +26,5 @@ app.listen(PORT, () => {
   rowdyResults.print();
   console.log(`You're currently on ${PORT} 🦻`);
 });
+
+module.exports = app;

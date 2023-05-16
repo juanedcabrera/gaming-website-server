@@ -29,3 +29,4 @@ module.exports = {
   Like: require('./Like'),
   Comment: require('./Comment')
 };
+
