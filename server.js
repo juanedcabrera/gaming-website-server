@@ -20,6 +20,10 @@ app.get("/", (req, res) => {
 
 // controllers
 app.use("/api-v1/users", require("./controllers/api-v1/users"));
+app.use("/api-v1/game", require("./controllers/api-v1/game"));
+app.use("/api-v1/like", require("./controllers/api-v1/like"));
+app.use("/api-v1/comment", require("./controllers/api-v1/comment"));
+app.use("/api-v1/follow", require("./controllers/api-v1/follow"));
 
 // hey listen
 app.listen(PORT, () => {
