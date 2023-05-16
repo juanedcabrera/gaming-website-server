@@ -10,4 +10,229 @@ router.get("/", (req, res) => {
   res.json({ msg: "welcome to the users endpoint" });
 });
 
+// POST /users/register - create new user
+router.post("/register", async (req, res) => {
+  try {
+    // check if user exists in db by email
+    const findUser = await db.User.findOne({
+      email: req.body.email,
+    });
+    // if user exists, return 400 error
+    if (findUser) return res.status(400).json({ msg: "user already exists" });
+    // hash password from req.body
+    const password = req.body.password;
+    const saltRounds = 12;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    // create new user
+    const newUser = await db.User.create({
+      name: req.body.name,
+      email: req.body.email,
+      userName: req.body.userName,
+      password: hashedPassword,
+      avatar: req.body.avatar,
+      bio: req.body.bio,
+    });
+    // create token payload
+    const payload = {
+      name: newUser.name,
+      email: newUser.email,
+      userName: newUser.userName,
+      avatar: newUser.avatar,
+      bio: newUser.bio,
+      id: newUser.id,
+    };
+    // sign token
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
+    // destructure newUser object
+    const { id, name, email, userName, avatar, bio } = newUser;
+    // send res with token and newUser object
+    res.json({ token, user: { id, name, email, userName, avatar, bio } });
+  } catch (error) {
+    // log error
+    console.log(error);
+    // return 500 error if something goes wrong
+    res.status(500).json({ msg: "internal server error" });
+  }
+});
+
+// POST /users/login - authenticate user and return token
+router.post("/login", async (req, res) => {
+  try {
+    // find user by email
+    const findUser = await db.User.findOne({
+      email: req.body.email,
+    });
+    // if no user, return 400 error
+    if (!findUser) return res.status(400).json({ msg: "bad request" });
+    // check if passwords match
+    const match = await bcrypt.compare(req.body.password, findUser.password);
+    // if passwords don't match, return 400 error
+    if (!match) return res.status(400).json({ msg: "bad request" });
+    // create token payload
+    const payload = {
+      name: findUser.name,
+      email: findUser.email,
+      userName: findUser.userName,
+      avatar: findUser.avatar,
+      bio: findUser.bio,
+      id: findUser.id,
+    };
+    // sign token
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
+    // destructure findUser object
+    const { id, name, email, userName, avatar, bio } = findUser;
+    // send res with token and findUser object
+    res.json({ token, user: { id, name, email, userName, avatar, bio } });
+  } catch (error) {
+    // log error
+    console.log(error);
+    // return 500 error if something goes wrong
+    res.status(500).json({ msg: "internal server error" });
+  }
+});
+
+// GET /users/verify - verify user token
+router.get("/verify", authLockedRoute, async (req, res) => {
+  // get user id
+  const userId = await req.user.id;
+  try {
+    // find user by id
+    const findUser = await db.User.findById(userId).select("-password");
+    // destructure findUser object
+    const { id, name, email, userName, avatar, bio } = findUser;
+    // send res with findUser object
+    res.json({ user: { id, name, email, userName, avatar, bio } });
+  } catch (error) {
+    // log error
+    console.log(error);
+    // return 500 error if something goes wrong
+    res.status(500).json({ msg: "internal server error" });
+  }
+});
+
+// GET /users/:id - get user by id
+router.get("/:id", async (req, res) => {
+  try {
+    // find user by id
+    const findUser = await db.User.findById(req.params.id).select("-password");
+    // destructure findUser object
+    const { id, name, email, userName, avatar, bio } = findUser;
+    // send res with findUser object
+    res.json({ user: { id, name, email, userName, avatar, bio } });
+  } catch (error) {
+    // log error
+    console.log(error);
+    // return 500 error if something goes wrong
+    res.status(500).json({ msg: "internal server error" });
+  }
+});
+
+// PUT /users/:id - update user by id
+router.put("/:id", async (req, res) => {
+  try {
+    // find user by id and update
+    const updateUser = await db.User.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: req.body.name,
+        email: req.body.email,
+        userName: req.body.userName,
+        avatar: req.body.avatar,
+        bio: req.body.bio,
+      },
+      { new: true }
+    );
+    // destructure updateUser object
+    const { id, name, email, userName, avatar, bio } = updateUser;
+    // send res with updateUser object
+    res.json({ user: { id, name, email, userName, avatar, bio } });
+  } catch (error) {
+    // log error
+    console.log(error);
+    // return 500 error if something goes wrong
+    res.status(500).json({ msg: "internal server error" });
+  }
+});
+
+// DELETE /users/:id - delete user by id
+router.delete("/:id", async (req, res) => {
+  try {
+    // find user by id and delete
+    const deleteUser = await db.User.findByIdAndDelete(req.params.id);
+    // destructure deleteUser object
+    const { id, name, email, userName, avatar, bio } = deleteUser;
+    // send res with deleteUser object
+    res.json({ user: { id, name, email, userName, avatar, bio } });
+  } catch (error) {
+    // log error
+    console.log(error);
+    // return 500 error if something goes wrong
+    res.status(500).json({ msg: "internal server error" });
+  }
+});
+
+// GET /users/:id/followers - get user followers by id
+router.get("/:id/followers", async (req, res) => {
+  try {
+    'use strict';
+    // find user by id
+    const findUser = await db.User.findById(req.params.id);
+    // find user followers
+    const findFollowers = await db.Follow.find({ following_id: findUser.id });
+    // create followers array
+    const followers = [];
+    // loop through findFollowers
+    for (let i = 0; i < findFollowers.length; i++) {
+    // find follower by id
+    const findFollower = await db.User.findById(findFollowers[i].follower_id);
+    // push findFollower to followers array
+    followers.push(findFollower);
+    }
+    // send res with followers array
+    res.json({ followers });
+  } catch (error) {
+    // log error
+    console.log(error);
+    // return 500 error if something goes wrong
+    res.status(500).json({ msg: "internal server error" });
+  }
+});
+
+// GET /users/:id/following - get user following by id
+router.get("/:id/following", async (req, res) => {
+  try {
+    'use strict';
+    // find user by id
+    const findUser = await db.User.findById(req.params.id);
+    // find user following
+    const findFollowing = await db.Follow.find({ follower_id: findUser.id });
+    // create following array
+    const following = [];
+    // loop through findFollowing
+    for (let i = 0; i < findFollowing.length; i++) {
+    // find following by id
+    const findFollow = await db.User.findById(findFollowing[i].following_id);
+    // push findFollow to following array
+    following.push(findFollow);
+    }
+    // send res with following array
+    res.json({ following });
+  } catch (error) {
+    // log error
+    console.log(error);
+    // return 500 error if something goes wrong
+    res.status(500).json({ msg: "internal server error" });
+  }
+});
+
+// POST /users/:id/follow - follow user by id
+router.post("/:id/follow", async (req, res) => {
+  try {
+    // find user by id
+    const findUser = await db.User.findById(req.params.id);
+    // find user to follow by id
+    f
+
+
+
 module.exports = router;
