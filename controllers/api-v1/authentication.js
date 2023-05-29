@@ -64,7 +64,7 @@ router.post('/login', async (req, res) => {
     try {
         // find user by email
         const findUser = await db.User.findOne({
-            email: req.body.email,
+            userName: req.body.userName,
         });
         // if user doesn't exist, return 400 error
         if (!findUser) return res.status(400).json({ msg: 'bad request' });

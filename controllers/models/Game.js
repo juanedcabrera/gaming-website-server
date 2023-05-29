@@ -7,6 +7,10 @@ const gameSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    userName: {
+        type: String,
+        required: true,
+    },
     category: {
         type: String,
         required: true
@@ -14,7 +18,7 @@ const gameSchema = new mongoose.Schema({
     techstack: {
         type: String,
     },
-    descriptions: {
+    description: {
         type: String,
         required: true,
     },

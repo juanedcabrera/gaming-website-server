@@ -24,6 +24,8 @@ app.use("/api-v1/game", require("./controllers/api-v1/game"));
 app.use("/api-v1/like", require("./controllers/api-v1/like"));
 app.use("/api-v1/comment", require("./controllers/api-v1/comment"));
 app.use("/api-v1/follow", require("./controllers/api-v1/follow"));
+app.use("/api-v1/search", require("./controllers/api-v1/search"));
+app.use("/api-v1/auth", require("./controllers/api-v1/authentication"));
 
 // hey listen
 app.listen(PORT, () => {
