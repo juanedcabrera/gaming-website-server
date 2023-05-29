@@ -33,6 +33,8 @@ router.post("/", authLockedRoute, async (req, res) => {
         // create game
         const game = await db.Game.create({
             title: req.body.title,
+            userName: req.body.userName,
+            category: req.body.category,
             description: req.body.description,
             image: req.body.image,
             user_id: req.body.user_id
