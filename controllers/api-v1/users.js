@@ -55,6 +55,43 @@ router.post("/register", async (req, res) => {
   }
 });
 
+// Get /users/login - login user and return JWT
+router.post("/login", async (req, res) => {
+  try {
+    // find user by email
+    const findUser = await db.User.findOne({
+      email: req.body.email,
+    });
+    // if user doesn't exist, return 400 error
+    if (!findUser) return res.status(400).json({ msg: "bad request" });
+    // check if passwords match
+    const match = await bcrypt.compare(req.body.password, findUser.password);
+    // if passwords don't match, return 400 error
+    if (!match) return res.status(400).json({ msg: "bad request" });
+    // create token payload
+    const payload = {
+      name: findUser.name,
+      email: findUser.email,
+      userName: findUser.userName,
+      avatar: findUser.avatar,
+      bio: findUser.bio,
+      id: findUser.id,
+    };
+    // sign token
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
+    // destructure findUser object
+    const { id, name, email, userName, avatar, bio } = findUser;
+    // send response with token and findUser object
+    res.json({ token, user: { id, name, email, userName, avatar, bio } });
+  } catch (error) {
+    // log error
+    console.log(error);
+    // return 500 error if something goes wrong
+    res.status(500).json({ msg: "internal server error" });
+  }
+});
+
+
 
 // GET /users/:id - get user by id
 router.get("/:id", async (req, res) => {

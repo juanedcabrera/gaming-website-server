@@ -1,15 +1,47 @@
 // Game Controller
-//
 const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const authLockedRoute = require("./authLockedRoute")
+const mongoose = require("mongoose");
 
 // GET /game/ - test endpoint
 router.get("/", (req, res) => {
     res.json({ msg: "welcome to the game endpoint" });
     }
 );
+
+// GET /game/all - get all games
+router.get("/all", async (req, res) => {
+    try {
+        // find all games
+        const games = await db.Game.find();
+        // send res with games
+        res.json({ games });
+    } catch (error) {
+        // log error
+        console.log(error);
+        // return 500 error if something goes wrong
+        res.status(500).json({ msg: "internal server error" });
+    }
+}
+);
+
+// This is not working until we get proper ObjectIDs in the database
+// Route to get 10 random games
+router.get("/random", async (req, res) => {
+    try {
+      // Fetch 10 random games from the database
+      const games = db.Game.aggregate([{ $sample: { size: 10 } }])
+    
+      // Send the games array as the response
+      res.status(200).json(games);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+  
 
 // GET /game/:id - get game by id
 router.get("/:id", async (req, res) => {
