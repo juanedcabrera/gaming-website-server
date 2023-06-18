@@ -1,7 +1,5 @@
-// require mongoose ODM
 const mongoose = require('mongoose');
 
-// schema
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -10,32 +8,37 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   userName: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   avatar: {
-    type: String
+    type: String,
   },
   bio: {
-    type: String
+    type: String,
   },
   created_at: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   updated_at: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
+  games: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Game',
+    },
+  ],
 });
 
-// module.exports
 module.exports = mongoose.model('User', UserSchema);

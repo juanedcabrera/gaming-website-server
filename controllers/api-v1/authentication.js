@@ -42,14 +42,14 @@ router.post('/register', async (req, res) => {
             userName: newUser.userName,
             avatar: newUser.avatar,
             bio: newUser.bio,
-            id: newUser.id,
+            userId: newUser.id,
         };
         // sign token
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
         // destructure newUser object
-        const { id, name, email, userName, avatar, bio } = newUser;
+        const { userId, name, email, userName, avatar, bio } = newUser;
         // send res with token and newUser object
-        res.json({ token, user: { id, name, email, userName, avatar, bio } });
+        res.json({ token, user: { userId, name, email, userName, avatar, bio } });
     } catch (error) {
         // log error
         console.log(error);
@@ -79,14 +79,14 @@ router.post('/login', async (req, res) => {
             userName: findUser.userName,
             avatar: findUser.avatar,
             bio: findUser.bio,
-            id: findUser.id,
+            userId: findUser.id,
         };
         // sign token
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
         // destructure findUser object
-        const { id, name, email, userName, avatar, bio } = findUser;
+        const { userId, name, email, userName, avatar, bio } = findUser;
         // send res with token and findUser object
-        res.json({ token, user: { id, name, email, userName, avatar, bio } });
+        res.json({ token, user: { userId, name, email, userName, avatar, bio } });
     } catch (error) {
         // log error
         console.log(error);

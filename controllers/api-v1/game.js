@@ -2,8 +2,9 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../models");
-const authLockedRoute = require("./authLockedRoute")
+const authLockedRoute = require("./authLockedRoute");
 const mongoose = require("mongoose");
+const jwt = require ('jsonwebtoken');
 
 // GET /game/ - test endpoint
 router.get("/", (req, res) => {
@@ -62,6 +63,16 @@ router.get("/:id", async (req, res) => {
 // POST /game/ - create game
 router.post("/", authLockedRoute, async (req, res) => {
     try {
+        let userId = ''
+        const authHeader = req.headers.authorization
+        if (authHeader) {
+            // get token from authHeader
+            const token = authHeader
+            // verify token
+            const verified = jwt.verify(token, process.env.JWT_SECRET);
+            userId = verified.id
+        }
+        console.log(userId)
         // create game
         const game = await db.Game.create({
             title: req.body.title,
@@ -69,8 +80,9 @@ router.post("/", authLockedRoute, async (req, res) => {
             category: req.body.category,
             description: req.body.description,
             image: req.body.image,
-            user_id: req.body.user_id
+            userId: userId,
         });
+         console.log('Game', game)
         // send res with game
         res.json({ game });
     } catch (error) {
@@ -81,6 +93,7 @@ router.post("/", authLockedRoute, async (req, res) => {
     }
 }
 );
+  
 
 // PUT /game/:id - update game by id
 router.put("/:id", authLockedRoute, async (req, res) => {
@@ -111,6 +124,22 @@ router.delete("/:id", authLockedRoute, async (req, res) => {
     try {
         // find game by id and delete
         const game = await db.Game.findByIdAndDelete(req.params.id);
+        // send res with game
+        res.json({ game });
+    } catch (error) {
+        // log error
+        console.log(error);
+        // return 500 error if something goes wrong
+        res.status(500).json({ msg: "internal server error" });
+    }
+}
+);
+
+// GET /game/userName - get game by userName
+router.get("/:userName", async (req, res) => {
+    try {
+        // find game by userName
+        const game = await db.Game.find({ userName: req.params.userName });
         // send res with game
         res.json({ game });
     } catch (error) {
