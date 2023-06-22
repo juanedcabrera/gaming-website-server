@@ -11,13 +11,10 @@ const gameSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-<<<<<<< HEAD
-=======
     userId: {
         type: String,
         required: true,
       },
->>>>>>> upload
     category: {
         type: String,
         required: true
@@ -25,8 +22,6 @@ const gameSchema = new mongoose.Schema({
     techstack: {
         type: String,
     },
-<<<<<<< HEAD
-=======
     link: {
         type: String,
         required: true,
@@ -35,7 +30,6 @@ const gameSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
->>>>>>> upload
     description: {
         type: String,
         required: true,

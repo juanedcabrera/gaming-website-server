@@ -1,17 +1,9 @@
 // Game Controller
-<<<<<<< HEAD
-//
-const express = require("express");
-const router = express.Router();
-const db = require("../models");
-const authLockedRoute = require("./authLockedRoute")
-=======
 const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const authLockedRoute = require("./authLockedRoute");
 
->>>>>>> upload
 
 // GET /game/ - test endpoint
 router.get("/", (req, res) => {
@@ -19,8 +11,6 @@ router.get("/", (req, res) => {
     }
 );
 
-<<<<<<< HEAD
-=======
 // GET /game/all - get all games
 router.get("/all", async (req, res) => {
     try {
@@ -53,7 +43,6 @@ router.get("/random", async (req, res) => {
   });
   
 
->>>>>>> upload
 // GET /game/:id - get game by id
 router.get("/:id", async (req, res) => {
     try {
@@ -71,29 +60,6 @@ router.get("/:id", async (req, res) => {
 );
 
 // POST /game/ - create game
-<<<<<<< HEAD
-router.post("/", authLockedRoute, async (req, res) => {
-    try {
-        // create game
-        const game = await db.Game.create({
-            title: req.body.title,
-            userName: req.body.userName,
-            category: req.body.category,
-            description: req.body.description,
-            image: req.body.image,
-            user_id: req.body.user_id
-        });
-        // send res with game
-        res.json({ game });
-    } catch (error) {
-        // log error
-        console.log(error);
-        // return 500 error if something goes wrong
-        res.status(500).json({ msg: "internal server error" });
-    }
-}
-);
-=======
 router.post("/upload", authLockedRoute, async (req, res) => {
     try {
       // find user
@@ -129,7 +95,6 @@ router.post("/upload", authLockedRoute, async (req, res) => {
   });
   
   
->>>>>>> upload
 
 // PUT /game/:id - update game by id
 router.put("/:id", authLockedRoute, async (req, res) => {
@@ -140,15 +105,11 @@ router.put("/:id", authLockedRoute, async (req, res) => {
             {
                 title: req.body.title,
                 description: req.body.description,
-<<<<<<< HEAD
-                image: req.body.image
-=======
                 image: req.body.image,
                 techstack: req.body.techstack,
                 link: req.body.link,
                 github: req.body.github,
                 category: req.body.category,
->>>>>>> upload
             },
             { new: true }
         );
@@ -179,8 +140,6 @@ router.delete("/:id", authLockedRoute, async (req, res) => {
 }
 );
 
-<<<<<<< HEAD
-=======
 // GET /game/userName - get game by userName
 router.get("/:userName", async (req, res) => {
     try {
@@ -197,5 +156,4 @@ router.get("/:userName", async (req, res) => {
 }
 );
 
->>>>>>> upload
 module.exports = router;
