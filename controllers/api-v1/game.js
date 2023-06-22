@@ -61,38 +61,37 @@ router.get("/:id", async (req, res) => {
 );
 
 // POST /game/ - create game
-router.post("/", authLockedRoute, async (req, res) => {
+router.post("/upload", authLockedRoute, async (req, res) => {
     try {
-        let userId = ''
-        const authHeader = req.headers.authorization
-        if (authHeader) {
-            // get token from authHeader
-            const token = authHeader
-            // verify token
-            const verified = jwt.verify(token, process.env.JWT_SECRET);
-            userId = verified.id
-        }
-        console.log(userId)
-        // create game
-        const game = await db.Game.create({
-            title: req.body.title,
-            userName: req.body.userName,
-            category: req.body.category,
-            description: req.body.description,
-            image: req.body.image,
-            userId: userId,
-        });
-         console.log('Game', game)
-        // send res with game
-        res.json({ game });
+      // find user
+      const user = await db.User.findOne({ userName: req.body.userName });
+  
+      if (!user) {
+        return res.status(404).json({ msg: "User not found" });
+      }
+  
+      // create game
+      const newGame = await db.Game.create({
+        title: req.body.title,
+        userName: req.body.userName,
+        category: req.body.category,
+        description: req.body.description,
+        image: req.body.image,
+        userId: user._id,
+      });
+  
+      console.log('Game is here: ', newGame);
+  
+      // send response with game
+      res.json({ newGame });
     } catch (error) {
-        // log error
-        console.log(error);
-        // return 500 error if something goes wrong
-        res.status(500).json({ msg: "internal server error" });
+      // log error
+      console.log(error);
+      // return 500 error if something goes wrong
+      res.status(500).json({ msg: "Internal server error" });
     }
-}
-);
+  });
+  
   
 
 // PUT /game/:id - update game by id
