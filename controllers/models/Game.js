@@ -22,6 +22,14 @@ const gameSchema = new mongoose.Schema({
     techstack: {
         type: String,
     },
+    link: {
+        type: String,
+        required: true,
+    },
+    github: {
+        type: String,
+        required: true,
+    },
     description: {
         type: String,
         required: true,

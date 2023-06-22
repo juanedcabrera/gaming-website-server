@@ -3,8 +3,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const authLockedRoute = require("./authLockedRoute");
-const mongoose = require("mongoose");
-const jwt = require ('jsonwebtoken');
+
 
 // GET /game/ - test endpoint
 router.get("/", (req, res) => {
@@ -77,6 +76,9 @@ router.post("/upload", authLockedRoute, async (req, res) => {
         category: req.body.category,
         description: req.body.description,
         image: req.body.image,
+        techstack: req.body.techstack,
+        link: req.body.link,
+        github: req.body.github,
         userId: user._id,
       });
   
@@ -103,7 +105,11 @@ router.put("/:id", authLockedRoute, async (req, res) => {
             {
                 title: req.body.title,
                 description: req.body.description,
-                image: req.body.image
+                image: req.body.image,
+                techstack: req.body.techstack,
+                link: req.body.link,
+                github: req.body.github,
+                category: req.body.category,
             },
             { new: true }
         );
