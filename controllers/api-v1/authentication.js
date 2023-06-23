@@ -42,24 +42,14 @@ router.post('/register', async (req, res) => {
             userName: newUser.userName,
             avatar: newUser.avatar,
             bio: newUser.bio,
-<<<<<<< HEAD
-            id: newUser.id,
-=======
             userId: newUser.id,
->>>>>>> upload
         };
         // sign token
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
         // destructure newUser object
-<<<<<<< HEAD
         const { id, name, email, userName, avatar, bio } = newUser;
         // send res with token and newUser object
         res.json({ token, user: { id, name, email, userName, avatar, bio } });
-=======
-        const { userId, name, email, userName, avatar, bio } = newUser;
-        // send res with token and newUser object
-        res.json({ token, user: { userId, name, email, userName, avatar, bio } });
->>>>>>> upload
     } catch (error) {
         // log error
         console.log(error);
@@ -89,24 +79,14 @@ router.post('/login', async (req, res) => {
             userName: findUser.userName,
             avatar: findUser.avatar,
             bio: findUser.bio,
-<<<<<<< HEAD
             id: findUser.id,
-=======
-            userId: findUser.id,
->>>>>>> upload
         };
         // sign token
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
         // destructure findUser object
-<<<<<<< HEAD
         const { id, name, email, userName, avatar, bio } = findUser;
         // send res with token and findUser object
         res.json({ token, user: { id, name, email, userName, avatar, bio } });
-=======
-        const { userId, name, email, userName, avatar, bio } = findUser;
-        // send res with token and findUser object
-        res.json({ token, user: { userId, name, email, userName, avatar, bio } });
->>>>>>> upload
     } catch (error) {
         // log error
         console.log(error);
