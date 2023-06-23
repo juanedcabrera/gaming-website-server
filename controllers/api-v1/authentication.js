@@ -47,15 +47,9 @@ router.post('/register', async (req, res) => {
         // sign token
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
         // destructure newUser object
-<<<<<<< Updated upstream
-        const { id, name, email, userName, avatar, bio } = newUser;
-        // send res with token and newUser object
-        res.json({ token, user: { id, name, email, userName, avatar, bio } });
-=======
         const { userId, name, email, userName, avatar, bio } = newUser;
         // send res with token and newUser object
         res.json({ token, user: { userId, name, email, userName, avatar, bio } });
->>>>>>> Stashed changes
     } catch (error) {
         // log error
         console.log(error);
@@ -85,24 +79,14 @@ router.post('/login', async (req, res) => {
             userName: findUser.userName,
             avatar: findUser.avatar,
             bio: findUser.bio,
-<<<<<<< Updated upstream
-            id: findUser.id,
-=======
             userId: findUser.id,
->>>>>>> Stashed changes
         };
         // sign token
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
         // destructure findUser object
-<<<<<<< Updated upstream
-        const { id, name, email, userName, avatar, bio } = findUser;
-        // send res with token and findUser object
-        res.json({ token, user: { id, name, email, userName, avatar, bio } });
-=======
         const { userId, name, email, userName, avatar, bio } = findUser;
         // send res with token and findUser object
         res.json({ token, user: { userId, name, email, userName, avatar, bio } });
->>>>>>> Stashed changes
     } catch (error) {
         // log error
         console.log(error);
