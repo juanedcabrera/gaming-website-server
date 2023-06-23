@@ -1,10 +1,4 @@
 // Authlockedroute
-<<<<<<< Updated upstream
-
-const express = require('express');
-const router = express.Router();
-=======
->>>>>>> Stashed changes
 const jwt = require('jsonwebtoken');
 
 const authLockedRoute = async (req, res, next) => {
