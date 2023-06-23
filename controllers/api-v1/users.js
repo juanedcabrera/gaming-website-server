@@ -55,8 +55,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-=======
 // Get /users/login - login user and return JWT
 router.post("/login", async (req, res) => {
   try {
@@ -94,7 +92,6 @@ router.post("/login", async (req, res) => {
 });
 
 
->>>>>>> upload
 
 // GET /users/:id - get user by id
 router.get("/:id", async (req, res) => {

@@ -4,7 +4,6 @@ const router = express.Router();
 const db = require("../models");
 const authLockedRoute = require("./authLockedRoute");
 
-
 // GET /game/ - test endpoint
 router.get("/", (req, res) => {
     res.json({ msg: "welcome to the game endpoint" });
@@ -140,20 +139,5 @@ router.delete("/:id", authLockedRoute, async (req, res) => {
 }
 );
 
-// GET /game/userName - get game by userName
-router.get("/:userName", async (req, res) => {
-    try {
-        // find game by userName
-        const game = await db.Game.find({ userName: req.params.userName });
-        // send res with game
-        res.json({ game });
-    } catch (error) {
-        // log error
-        console.log(error);
-        // return 500 error if something goes wrong
-        res.status(500).json({ msg: "internal server error" });
-    }
-}
-);
 
 module.exports = router;

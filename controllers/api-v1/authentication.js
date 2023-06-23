@@ -42,16 +42,12 @@ router.post('/register', async (req, res) => {
             userName: newUser.userName,
             avatar: newUser.avatar,
             bio: newUser.bio,
-<<<<<<< HEAD
-            id: newUser.id,
-=======
             userId: newUser.id,
->>>>>>> upload
         };
         // sign token
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
         // destructure newUser object
-<<<<<<< HEAD
+<<<<<<< Updated upstream
         const { id, name, email, userName, avatar, bio } = newUser;
         // send res with token and newUser object
         res.json({ token, user: { id, name, email, userName, avatar, bio } });
@@ -59,7 +55,7 @@ router.post('/register', async (req, res) => {
         const { userId, name, email, userName, avatar, bio } = newUser;
         // send res with token and newUser object
         res.json({ token, user: { userId, name, email, userName, avatar, bio } });
->>>>>>> upload
+>>>>>>> Stashed changes
     } catch (error) {
         // log error
         console.log(error);
@@ -89,16 +85,16 @@ router.post('/login', async (req, res) => {
             userName: findUser.userName,
             avatar: findUser.avatar,
             bio: findUser.bio,
-<<<<<<< HEAD
+<<<<<<< Updated upstream
             id: findUser.id,
 =======
             userId: findUser.id,
->>>>>>> upload
+>>>>>>> Stashed changes
         };
         // sign token
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
         // destructure findUser object
-<<<<<<< HEAD
+<<<<<<< Updated upstream
         const { id, name, email, userName, avatar, bio } = findUser;
         // send res with token and findUser object
         res.json({ token, user: { id, name, email, userName, avatar, bio } });
@@ -106,7 +102,7 @@ router.post('/login', async (req, res) => {
         const { userId, name, email, userName, avatar, bio } = findUser;
         // send res with token and findUser object
         res.json({ token, user: { userId, name, email, userName, avatar, bio } });
->>>>>>> upload
+>>>>>>> Stashed changes
     } catch (error) {
         // log error
         console.log(error);
