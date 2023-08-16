@@ -13,7 +13,7 @@ app.use(cors());
 // request body parsing
 app.use(express.json());
 
-// GET / test index
+// GET / index
 app.get("/", (req, res) => {
   res.json({ msg: "hello backend 🤖" });
 });
