@@ -58,6 +58,21 @@ router.get("/:id", async (req, res) => {
 }
 );
 
+// GET /game/category/:category - get games by category
+router.get("/category/:category", async (req, res) => {
+  try {
+      // find games by category
+      const games = await db.Game.find({ category: req.params.category });
+      // send response with games
+      res.json({ games });
+  } catch (error) {
+      // log error
+      console.log(error);
+      // return 500 error if something goes wrong
+      res.status(500).json({ msg: "internal server error" });
+  }
+});
+
 // POST /game/ - create game
 router.post("/upload", authLockedRoute, async (req, res) => {
     try {
@@ -104,6 +119,7 @@ router.put("/:id", authLockedRoute, async (req, res) => {
             {
                 title: req.body.title,
                 description: req.body.description,
+                userName: req.body.userName,
                 image: req.body.image,
                 techstack: req.body.techstack,
                 link: req.body.link,

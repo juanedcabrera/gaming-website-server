@@ -1,5 +1,6 @@
 // Authlockedroute
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const authLockedRoute = async (req, res, next) => {
     try {
@@ -10,7 +11,7 @@ const authLockedRoute = async (req, res, next) => {
             // get token from authHeader
             const token = authHeader
             // verify token
-            const payload = jwt.verify(token, process.env.JWT_SECRET);
+            const payload = jwt.verify(token, `${process.env.JWT_SECRET}`);
             // attach payload to req object
             req.payload = payload;
             // move on to next middleware

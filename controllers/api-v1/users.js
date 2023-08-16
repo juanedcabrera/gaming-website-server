@@ -4,6 +4,7 @@ const db = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const authLockedRoute = require("./authLockedRoute")
+require ('dotenv').config();
 
 // GET /users/ - test endpoint
 router.get("/", (req, res) => {
@@ -78,7 +79,7 @@ router.post("/login", async (req, res) => {
       id: findUser.id,
     };
     // sign token
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
+    const token = jwt.sign(payload, `${process.env.JWT_SECRET}`, { expiresIn: 60 * 60 });
     // destructure findUser object
     const { id, name, email, userName, avatar, bio } = findUser;
     // send response with token and findUser object
@@ -90,6 +91,7 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ msg: "internal server error" });
   }
 });
+
 
 
 
