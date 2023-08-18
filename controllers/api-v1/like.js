@@ -32,17 +32,26 @@ router.post("/", authLockedRoute, async (req, res) => {
     try {
         // create like
         const like = await db.Like.create({
-            user_id: req.body.user_id,
-            game_id: req.body.game_id
+            user: req.body.user_id,
+            game: req.body.game_id
         });
         // send res with like
         res.json({ like });
     } catch (error) {
         // log error
         console.log(error);
+        console.log(req.body)
         // return 500 error if something goes wrong
         res.status(500).json({ msg: "internal server error" });
     }
+    // try {
+    //     console.log(req.body)
+    //     res.json({ msg: "received" })
+    // }
+    // catch (error) {
+    //     console.log(req.body)
+    //     return res.status(500).json({ msg: "internal server error" });
+    // }
 }
 );
 
