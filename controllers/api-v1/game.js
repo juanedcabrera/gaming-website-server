@@ -155,5 +155,42 @@ router.delete("/:id", authLockedRoute, async (req, res) => {
 }
 );
 
+// GET /game/category - get games by category
+router.get("/category/:category", async (req, res) => {
+    try {
+        // find games by category
+        const games = await db.Game.find({ category: req.params.category })
+        // send res with games
+        res.json({ games });
+    } catch (error) {
+        // log error
+        console.log(error);
+        // return 500 error if something goes wrong
+        res.status(500).json({ msg: "internal server error" });
+    }
+}
+);
+
+// GET /game/search - search games by title or username
+router.get("/search/:search", async (req, res) => {
+    try {
+        // find games by title or username
+        const games = await db.Game.find({
+            $or: [
+                { title: { $regex: req.params.search, $options: "i" } },
+                { userName: { $regex: req.params.search, $options: "i" } },
+            ],
+        });
+        // send res with games
+        res.json({ games });
+    } catch (error) {
+        // log error
+        console.log(error);
+        // return 500 error if something goes wrong
+        res.status(500).json({ msg: "internal server error" });
+    }
+}
+);
+
 
 module.exports = router;
