@@ -12,10 +12,11 @@ router.get("/", (req, res) => {
 );
 
 // GET /like/:id - get like by id
-router.get("/:id", async (req, res) => {
+router.get("/:user/:game", async (req, res) => {
     try {
-        // find like by id
-        const like = await db.Like.findById(req.params.id);
+        // find like by game id and user id
+        const like = await db.Like.findOne({ user: req.params.user, game: req.params.game });
+        console.log({like})
         // send res with like
         res.json({ like });
     } catch (error) {
@@ -32,17 +33,26 @@ router.post("/", authLockedRoute, async (req, res) => {
     try {
         // create like
         const like = await db.Like.create({
-            user_id: req.body.user_id,
-            game_id: req.body.game_id
+            user: req.body.user_id,
+            game: req.body.game_id
         });
         // send res with like
         res.json({ like });
     } catch (error) {
         // log error
         console.log(error);
+        console.log(req.body)
         // return 500 error if something goes wrong
         res.status(500).json({ msg: "internal server error" });
     }
+    // try {
+    //     console.log(req.body)
+    //     res.json({ msg: "received" })
+    // }
+    // catch (error) {
+    //     console.log(req.body)
+    //     return res.status(500).json({ msg: "internal server error" });
+    // }
 }
 );
 
@@ -57,7 +67,7 @@ router.delete("/:id", authLockedRoute, async (req, res) => {
         // log error
         console.log(error);
         // return 500 error if something goes wrong
-        res.status(500).json({ msg: "internal server error" });
+        res.status(500).json({ msg: "internal server error" }, error);
     }
 }
 );
