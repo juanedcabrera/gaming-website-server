@@ -58,6 +58,24 @@ router.get("/:id", async (req, res) => {
 }
 );
 
+// GET /game/user/:userId - get games by user id
+router.get("/user/:userId", async (req, res) => {
+    try {
+        // find game(s) by user id
+        const games = await db.Game.find({ userId: req.params.userId });
+        // send res with game(s)
+        res.json({ games });
+        console.log(req.params.userId)
+    } catch (error) {
+        // log error
+        console.log(error);
+        // return 500 error if something goes wrong
+        res.status(500).json({ msg: "internal server error" });
+    }
+}
+);
+
+
 // GET /game/category/:category - get games by category
 router.get("/category/:category", async (req, res) => {
   try {
@@ -82,7 +100,19 @@ router.post("/upload", authLockedRoute, async (req, res) => {
       if (!user) {
         return res.status(404).json({ msg: "User not found" });
       }
-  
+      
+      const linkString = req.body.link.toString();
+
+      if (!linkString.startsWith("http://") && !linkString.startsWith("https://")) {
+        console.log(linkString);
+        return res.status(422).json({ msg: "Invalid URL - Link must start with https:// or http://" });
+      }
+
+      if (!linkString.includes(".")) {
+        console.log(linkString);
+        return res.status(422).json({ msg: "Invalid URL - Link musts contain a domain extension" });
+      }
+
       // create game
       const newGame = await db.Game.create({
         title: req.body.title,
@@ -146,43 +176,6 @@ router.delete("/:id", authLockedRoute, async (req, res) => {
         const game = await db.Game.findByIdAndDelete(req.params.id);
         // send res with game
         res.json({ game });
-    } catch (error) {
-        // log error
-        console.log(error);
-        // return 500 error if something goes wrong
-        res.status(500).json({ msg: "internal server error" });
-    }
-}
-);
-
-// GET /game/category - get games by category
-router.get("/category/:category", async (req, res) => {
-    try {
-        // find games by category
-        const games = await db.Game.find({ category: req.params.category })
-        // send res with games
-        res.json({ games });
-    } catch (error) {
-        // log error
-        console.log(error);
-        // return 500 error if something goes wrong
-        res.status(500).json({ msg: "internal server error" });
-    }
-}
-);
-
-// GET /game/search - search games by title or username
-router.get("/search/:search", async (req, res) => {
-    try {
-        // find games by title or username
-        const games = await db.Game.find({
-            $or: [
-                { title: { $regex: req.params.search, $options: "i" } },
-                { userName: { $regex: req.params.search, $options: "i" } },
-            ],
-        });
-        // send res with games
-        res.json({ games });
     } catch (error) {
         // log error
         console.log(error);
