@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const authLockedRoute = require("./authLockedRoute");
+const Game = require("../models/Game");
 
 // GET /game/ - test endpoint
 router.get("/", (req, res) => {
@@ -30,9 +31,9 @@ router.get("/all", async (req, res) => {
 // Route to get 10 random games
 router.get("/random", async (req, res) => {
     try {
-      // Fetch 10 random games from the database
-      const games = db.Game.aggregate([{ $sample: { size: 10 } }])
-    
+      // Fetch 10 random games from the database using Mongoose
+      const games = await Game.aggregate([{ $sample: { size: 10 } }]).exec();
+      
       // Send the games array as the response
       res.status(200).json(games);
     } catch (error) {
@@ -40,6 +41,7 @@ router.get("/random", async (req, res) => {
       res.status(500).json({ error: "Internal server error" });
     }
   });
+  
   
 
 // GET /game/:id - get game by id
