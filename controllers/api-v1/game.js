@@ -31,7 +31,7 @@ router.get("/all", async (req, res) => {
 router.get("/random", async (req, res) => {
     try {
       // Fetch 10 random games from the database using Mongoose
-      const games = await Game.aggregate([{ $sample: { size: 10 } }]).exec();
+      const games = await Game.aggregate([{ $sample: { size: 10 } }])
       
       // Send the games array as the response
       res.status(200).json(games);

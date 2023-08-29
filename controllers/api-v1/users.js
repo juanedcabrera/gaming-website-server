@@ -263,7 +263,7 @@ router.post("/profile/:id/follow", async (req, res) => {
 router.get('/random', async (req, res) => {
   try {
     // Fetch 10 random users from the database using Mongoose
-    const users = await db.User.aggregate([{ $sample: { size: 10 } }]).exec();
+    const users = await db.User.aggregate([{ $sample: { size: 10 } }])
 
     // Send the users array as the response
     res.status(200).json(users);
