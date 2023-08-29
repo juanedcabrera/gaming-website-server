@@ -27,7 +27,6 @@ router.get("/all", async (req, res) => {
 }
 );
 
-// This is not working until we get proper ObjectIDs in the database
 // Route to get 10 random games
 router.get("/random", async (req, res) => {
     try {

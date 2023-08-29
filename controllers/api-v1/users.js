@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const authLockedRoute = require("./authLockedRoute")
 require ('dotenv').config();
+const User = require("../models/User");
 
 // GET /users/ - test endpoint
 router.get("/", (req, res) => {
@@ -93,17 +94,15 @@ router.post("/login", async (req, res) => {
 });
 
 
-
-
 // GET /users/:id - get user by id
-router.get("/:id", async (req, res) => {
+router.get("/profile/:id", async (req, res) => {
   try {
     // find user by id
     const findUser = await db.User.findById(req.params.id).select("-password");
     // destructure findUser object
-    const { id, name, email, userName, avatar, bio } = findUser;
+    const { _id, name, email, userName, avatar, bio } = findUser;
     // send res with findUser object
-    res.json({ user: { id, name, email, userName, avatar, bio } });
+    res.json({ user: { _id, name, email, userName, avatar, bio } });
   } catch (error) {
     // log error
     console.log(error);
@@ -112,8 +111,9 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+
 // PUT /users/:id - update user by id
-router.put("/:id", async (req, res) => {
+router.put("/profile/:id", async (req, res) => {
   try {
     // find user by id and update
     const updateUser = await db.User.findByIdAndUpdate(
@@ -140,7 +140,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE /users/:id - delete user by id
-router.delete("/:id", async (req, res) => {
+router.delete("/profile/:id", async (req, res) => {
   try {
     // find user by id and delete
     const deleteUser = await db.User.findByIdAndDelete(req.params.id);
@@ -157,7 +157,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // GET /users/:id/followers - get user followers by id
-router.get("/:id/followers", async (req, res) => {
+router.get("/profile/:id/followers", async (req, res) => {
   try {
     'use strict';
     // find user by id
@@ -184,7 +184,7 @@ router.get("/:id/followers", async (req, res) => {
 });
 
 // GET /users/:id/following - get user following by id
-router.get("/:id/following", async (req, res) => {
+router.get("/profile/:id/following", async (req, res) => {
   try {
     'use strict';
     // find user by id
@@ -211,7 +211,7 @@ router.get("/:id/following", async (req, res) => {
 });
 
 // POST /users/:id/follow - follow user by id
-router.post("/:id/follow", async (req, res) => {
+router.post("/profile/:id/follow", async (req, res) => {
   try {
     // Find the user who wants to follow
     const followerId = req.user.id; // Assuming the authenticated user's ID is available through req.user
@@ -258,6 +258,21 @@ router.post("/:id/follow", async (req, res) => {
     res.status(500).json({ msg: "Internal server error" });
   }
 });
+
+// GET /users/random - get 10 random users with games
+router.get('/random', async (req, res) => {
+  try {
+    // Fetch 10 random users from the database using Mongoose
+    const users = await db.User.aggregate([{ $sample: { size: 10 } }]).exec();
+
+    // Send the users array as the response
+    res.status(200).json(users);
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+}
+});
+
 
 
 module.exports = router;
