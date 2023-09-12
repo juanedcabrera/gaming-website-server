@@ -4,6 +4,7 @@ const router = express.Router();
 const authLockedRoute = require('./authLockedRoute');
 const Post = require('../models/Post');
 const db = require('../models/');
+const Game = require('../models/Game');
 
 // GET /post/ - test endpoint
 router.get('/', (req, res) => {
@@ -25,6 +26,7 @@ router.get('/all', async (req, res) => {
   }
 });
 
+// POST /post/:gameId - create a new post
 router.post('/:gameId', authLockedRoute, async (req, res) => {
   console.log("post route hit")
   try {
@@ -60,5 +62,41 @@ router.post('/:gameId', authLockedRoute, async (req, res) => {
     res.status(500).json({ msg: 'Internal Server Error' });
   }
 });
+
+// GET /:postid - get specific post by post id
+router.get('/:postid', async (req, res) => {
+  try {
+    // find post by id
+    const post = await Post.findById(req.params.postid);
+    // send res with post
+    res.json({ post });
+  } catch (error) {
+    // log error
+    console.log(error);
+    // return 500 error if something goes wrong
+    res.status(500).json({ msg: 'internal server error' });
+  }
+});
+
+
+// GET /all/:gameId - get all post by id
+router.get('/all/:gameId', async (req, res) => {
+  try {
+    // find post by id
+    const post = await Game.findById(req.params.gameId);
+    const posts = await Post.find({ gameId: req.params.gameId });
+    // send res with post
+    res.json({ post, posts });
+  } catch (error) {
+    // log error
+    console.log(error);
+    // return 500 error if something goes wrong
+    res.status(500).json({ msg: 'internal server error' });
+  }
+});
+
+
+
+
 
 module.exports = router;
