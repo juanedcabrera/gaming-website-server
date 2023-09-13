@@ -27,7 +27,7 @@ router.get("/all", async (req, res) => {
 }
 );
 
-// Route to get 10 random games
+// GET /game/random - get 10 random games
 router.get("/random", async (req, res) => {
     try {
       // Fetch 10 random games from the database using Mongoose
@@ -128,6 +128,9 @@ router.post("/upload", authLockedRoute, async (req, res) => {
       });
   
       console.log('Game is here: ', newGame);
+
+      user.games.push(newGame._id);
+      await user.save();
   
       // send response with game
       res.json({ newGame });
