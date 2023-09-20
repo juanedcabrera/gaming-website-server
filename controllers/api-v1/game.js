@@ -95,6 +95,18 @@ router.get("/category/:category", async (req, res) => {
 // POST /game/ - create game
 router.post("/upload", authLockedRoute, async (req, res) => {
     try {
+      // search for game title
+      const foundTitle = await db.Game.findOne( { title: req.body.title })
+      // if found - send a duplicate game title response
+      if (foundTitle) {
+        return res.status(409).json({ msg: "This game appears to be a duplicate. Please upload game with a unique title.", error: 'title'})
+      }
+      /// search for game link 
+      const foundLink = await db.Game.findOne( { link: req.body.link })
+      // if found - send a duplicate game link response
+      if (foundLink) {
+        return res.status(409).json({ msg: "This game appears to be a duplicate. Please upload game with a unique link.", error: 'link'})
+      }
       // find user
       const user = await db.User.findOne({ userName: req.body.userName });
   
@@ -106,12 +118,12 @@ router.post("/upload", authLockedRoute, async (req, res) => {
 
       if (!linkString.startsWith("http://") && !linkString.startsWith("https://")) {
         console.log(linkString);
-        return res.status(422).json({ msg: "Invalid URL - Link must start with https:// or http://" });
+        return res.status(422).json({ msg: "Invalid URL - Link must start with https:// or http://", error: 'link' });
       }
 
       if (!linkString.includes(".")) {
         console.log(linkString);
-        return res.status(422).json({ msg: "Invalid URL - Link musts contain a domain extension" });
+        return res.status(422).json({ msg: "Invalid URL - Link musts contain a domain extension", error: 'link' });
       }
 
       // create game

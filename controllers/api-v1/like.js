@@ -11,6 +11,23 @@ router.get("/", (req, res) => {
     }   
 );
 
+// GET /like/game/:game_id= - get likes by game id
+router.get("/game/:game", async (req, res) => {
+    try {
+        //find likes by game id
+        const likes = await db.Like.find({ game: req.params.game });
+        // send res with number of likes
+        if (!likes) return res.json({ likes: 0 })
+        const amount = likes.length
+        res.json({ likes: amount });
+    } catch (error) {
+        // log error
+        console.log(error);
+        // return 500 error if something goes wrong
+        res.status(500).json({ msg: "internal server error" });
+    }
+})
+
 // GET /like/:id - get like by id
 router.get("/:user/:game", async (req, res) => {
     try {

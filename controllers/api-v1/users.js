@@ -65,11 +65,11 @@ router.post("/login", async (req, res) => {
       email: req.body.email,
     });
     // if user doesn't exist, return 400 error
-    if (!findUser) return res.status(400).json({ msg: "bad request" });
+    if (!findUser) return res.status(400).json({ msg: "Incorrect Username or Password" });
     // check if passwords match
     const match = await bcrypt.compare(req.body.password, findUser.password);
     // if passwords don't match, return 400 error
-    if (!match) return res.status(400).json({ msg: "bad request" });
+    if (!match) return res.status(400).json({ msg: "Incorrect Username or Password" });
     // create token payload
     const payload = {
       name: findUser.name,
