@@ -41,7 +41,7 @@ router.post('/:gameId', authLockedRoute, async (req, res) => {
     const newBlogPost = await Post.create({
       title: req.body.title,
       content: req.body.content,
-      image: req.body.imageLink,
+      imageLink: req.body.imageLink,
       videoLink: req.body.videoLink,
       gameId: req.params.gameId,
     });
@@ -72,8 +72,8 @@ router.put('/:postid', authLockedRoute, async (req, res) => {
       {
         title: req.body.title,
         content: req.body.content,
-        image: req.body.image,
         videoLink: req.body.videoLink,
+        imageLink: req.body.imageLink,
       },
       { new: true }
     );
