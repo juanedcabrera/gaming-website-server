@@ -112,10 +112,21 @@ router.get("/profile/:id", async (req, res) => {
 });
 
 
-// PUT /users/:id - update user by id
+// PUT /users/profile/:id - update user profile by id
 router.put("/profile/:id", async (req, res) => {
   try {
-    // find user by id and update
+    // Check if a new password is provided in the request body
+    if (req.body.newPassword) {
+      // Hash the new password
+      const newPassword = req.body.newPassword;
+      const saltRounds = 12;
+      const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+      console.log('Password updated'  )
+      // Update the user's password in the database
+      await db.User.findByIdAndUpdate(req.params.id, { password: hashedPassword });
+    }
+
+    // Update other user profile information
     const updateUser = await db.User.findByIdAndUpdate(
       req.params.id,
       {
@@ -127,17 +138,22 @@ router.put("/profile/:id", async (req, res) => {
       },
       { new: true }
     );
-    // destructure updateUser object
+
+    // Destructure updateUser object
     const { id, name, email, userName, avatar, bio } = updateUser;
-    // send res with updateUser object
+
+    // Send a response with updateUser object
     res.json({ user: { id, name, email, userName, avatar, bio } });
   } catch (error) {
-    // log error
+    // Log error
     console.log(error);
-    // return 500 error if something goes wrong
-    res.status(500).json({ msg: "internal server error" });
+    
+    // Return a 500 error if something goes wrong
+    res.status(500).json({ msg: "Internal server error" });
   }
 });
+
+
 
 // DELETE /users/:id - delete user by id
 router.delete("/profile/:id", async (req, res) => {
