@@ -82,7 +82,7 @@ router.post('/login', async (req, res) => {
             userId: findUser.id,
         };
         // sign token
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
+        const token = jwt.sign(payload, process.env.JWT_SECRET);
         // destructure findUser object
         const { userId, name, email, userName, avatar, bio } = findUser;
         // send res with token and findUser object
