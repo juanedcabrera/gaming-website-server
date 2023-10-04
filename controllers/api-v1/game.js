@@ -125,6 +125,7 @@ router.post("/upload", authLockedRoute, async (req, res) => {
         link: req.body.link,
         github: req.body.github,
         userId: user._id,
+        likes: [],
       });
   
       console.log('Game is here: ', newGame);
@@ -159,6 +160,7 @@ router.put("/:id", authLockedRoute, async (req, res) => {
                 link: req.body.link,
                 github: req.body.github,
                 category: req.body.category,
+                likes: req.body.likes,
             },
             { new: true }
         );
