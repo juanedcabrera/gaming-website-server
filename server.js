@@ -5,7 +5,7 @@ const rowdy = require("rowdy-logger");
 
 // express
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT;
 // for debug logging
 const rowdyResults = rowdy.begin(app);
 // cross-origin resource sharing
